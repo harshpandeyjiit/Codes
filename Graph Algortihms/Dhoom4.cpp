@@ -39,47 +39,46 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
-#define MAXN 1000005
-
-vector<int> adjLists[MAXN];
-int visited[MAXN];
-
-void addEdge(int src, int dest)
-{
-    adjLists[src].push_back(dest);
-}
-
-void DFS(int vertex)
-{
-    visited[vertex] = true;
-    cout<<vertex<<" ";
-    vector<int>::iterator i;
-    for(i = adjLists[vertex].begin(); i != adjLists[vertex].end(); ++i)
-    {
-            if(!visited[*i])
-            {
-                DFS(*i);
-            }
-    }
-}
-
 int32_t main()
 {
     fastio
-    int t;
-    cin>>t;
+    int t=1;
+    //cin>>t;
     while(t--)
     {
-        int n,m;
-        cin>>n>>m;
-        rep(i,m)
-        {
-            int a,b;
-            cin>>a>>b;
-            adjLists[a].pb(b);
-            adjLists[b].pb(a);
-        }
-        DFS(0);
+          int  x,y;
+          cin>>x>>y;
+          int  visited[100005];
+          memset(visited,-1,sizeof(visited));
+          visited[x]=0;
+          int  n;
+          queue <int > q;
+          cin>>n;
+          int  arr[1005];
+          rep(i,n)cin>>arr[i];
+          q.push(x);
+          while(!q.empty())
+          {
+              x=q.front();
+              q.pop();
+              if(x==y)
+              {
+                break;
+              }
+              for(int  i=0; i<n; i++)
+              {
+                  int  as=(((arr[i]%100000)*(x%100000))%100000);
+                  if(visited[as]==-1)
+                  {
+                    visited[as]=visited[x]+1;
+                    q.push(as);
+                  }
+                  if(as==y)
+                  break;
+              }
+              if(visited[y]!=-1)break;
+          }
+          cout<<visited[y]<<endl;
     }
     return 0;
 }

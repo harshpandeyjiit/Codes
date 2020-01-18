@@ -39,47 +39,57 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
-#define MAXN 1000005
-
-vector<int> adjLists[MAXN];
-int visited[MAXN];
-
-void addEdge(int src, int dest)
+#define MAXN 1005
+vector<int> adjlist[MAXN];
+int visited[MAXN]={0},lucky[1005];
+queue<int> q;
+int current;
+void bfs()
 {
-    adjLists[src].push_back(dest);
-}
-
-void DFS(int vertex)
-{
-    visited[vertex] = true;
-    cout<<vertex<<" ";
-    vector<int>::iterator i;
-    for(i = adjLists[vertex].begin(); i != adjLists[vertex].end(); ++i)
+    while(!q.empty())
     {
-            if(!visited[*i])
+        current=q.front();
+        vector<int>::iterator it;
+        for(it=adjlist[current].begin();it!=adjlist[current].end();it++)
+        {
+            if(!visited[*it])
             {
-                DFS(*i);
+                visited[*it]=1;
+                q.push(*it);
+                lucky[*it]=lucky[current]+1;
             }
+        }
+        //cout<<current<<" ";
+        q.pop();
     }
 }
 
 int32_t main()
 {
     fastio
-    int t;
-    cin>>t;
+    int t=1;
+    //cin>>t;
     while(t--)
     {
         int n,m;
         cin>>n>>m;
+        rep(i,n)lucky[i]=10000000;
         rep(i,m)
         {
             int a,b;
             cin>>a>>b;
-            adjLists[a].pb(b);
-            adjLists[b].pb(a);
+            adjlist[a].pb(b);
+            adjlist[b].pb(a);
         }
-        DFS(0);
+        q.push(0);
+        visited[0]=1;
+        lucky[0]=0;
+        bfs();
+        repr(i,1,n)
+        {
+            if(lucky[i]!=10000000)cout<<lucky[i]<<endl;
+            else cout<<"-1"<<endl;
+        }
     }
     return 0;
 }

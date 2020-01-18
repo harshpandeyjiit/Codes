@@ -39,47 +39,64 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
-#define MAXN 1000005
-
-vector<int> adjLists[MAXN];
-int visited[MAXN];
-
-void addEdge(int src, int dest)
+#define MAXN 100005
+vector<int> adjlist[MAXN];
+int visited[MAXN]={0};
+int predecessor[MAXN]={0};
+int dist[MAXN]={0};
+queue<int> q;
+int current,x,y;
+void bfs()
 {
-    adjLists[src].push_back(dest);
-}
-
-void DFS(int vertex)
-{
-    visited[vertex] = true;
-    cout<<vertex<<" ";
-    vector<int>::iterator i;
-    for(i = adjLists[vertex].begin(); i != adjLists[vertex].end(); ++i)
+    while(!q.empty())
     {
-            if(!visited[*i])
+        current=q.front();
+        vector<int>::iterator it;
+        sort(adjlist[current].begin(),adjlist[current].end());
+        for(it=adjlist[current].begin();it!=adjlist[current].end();it++)
+        {
+            if(!visited[*it])
             {
-                DFS(*i);
+                dist[*it]=dist[current]+1;
+                predecessor[*it]=current;
+                visited[*it]=1;
+                q.push(*it);
             }
+        }
+        q.pop();
     }
 }
 
 int32_t main()
 {
     fastio
-    int t;
-    cin>>t;
+    int t=1;
     while(t--)
     {
-        int n,m;
-        cin>>n>>m;
+        int n,m,k,c;
+        cin>>n>>m>>k>>c;
         rep(i,m)
         {
             int a,b;
             cin>>a>>b;
-            adjLists[a].pb(b);
-            adjLists[b].pb(a);
+            adjlist[a-1].pb(b-1);
+            adjlist[b-1].pb(a-1);
         }
-        DFS(0);
+        cin>>x>>y;
+        q.push(x-1);
+        visited[x-1]=1;
+        bfs();
+        vector<int> mypath;
+        int i=y-1;
+        while(i!=x-1)
+        {
+            mypath.push_back(predecessor[i]);
+            i=predecessor[i];
+        }
+        reverse(mypath.begin(),mypath.end());
+        cout<<mypath.size()+1<<endl;
+        for(int i=0;i<mypath.size();i++)cout<<mypath[i]+1<<" ";
+        cout<<y<<endl;
     }
     return 0;
 }
