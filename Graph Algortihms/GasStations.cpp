@@ -39,30 +39,6 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
-#define MAXN 1000005
-
-vector<int> adjLists[MAXN];
-int visited[MAXN];
-
-void addEdge(int src, int dest)
-{
-    adjLists[src].push_back(dest);
-}
-
-void DFS(int vertex)
-{
-    visited[vertex] = true;
-    cout<<vertex<<" ";
-    vector<int>::iterator i;
-    for(i = adjLists[vertex].begin(); i != adjLists[vertex].end(); ++i)
-    {
-            if(!visited[*i])
-            {
-                DFS(*i);
-            }
-    }
-}
-
 int32_t main()
 {
     fastio
@@ -70,16 +46,23 @@ int32_t main()
     //cin>>t;
     while(t--)
     {
-        int n,m;
-        cin>>n>>m;
-        rep(i,m)
+        int  n,x,g,count=0;
+        cin>>n>>x;
+        int  temp =x;
+        while(n--)
         {
-            int a,b;
-            cin>>a>>b;
-            adjLists[a-1].pb(b-1);
-            adjLists[b-1].pb(a-1);
+            cin>>g;
+            temp=temp-g;
+            if(temp>0)
+            {
+                count ++;
+            }
+            else
+            {
+                break;
+            }
         }
-        DFS(0);
+        cout<<count+1;
+        return 0;
     }
-    return 0;
 }

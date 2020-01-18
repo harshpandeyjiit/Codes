@@ -39,22 +39,19 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
-#define MAXN 1000005
-
-vector<int> adjLists[MAXN];
-int visited[MAXN];
-
-void addEdge(int src, int dest)
-{
-    adjLists[src].push_back(dest);
-}
+#define MAXN 100005
+vector<int> adjlist[26];
+int visited[MAXN]={0},parent[MAXN]={0};
+char arr[MAXN];
+multiset<char> myset;
 
 void DFS(int vertex)
 {
     visited[vertex] = true;
-    cout<<vertex<<" ";
+    myset.erase(arr[vertex]);
+    cout<<arr[vertex]<<" ";
     vector<int>::iterator i;
-    for(i = adjLists[vertex].begin(); i != adjLists[vertex].end(); ++i)
+    for(i = adjlist[vertex].begin(); i != adjlist[vertex].end(); ++i)
     {
             if(!visited[*i])
             {
@@ -67,19 +64,31 @@ int32_t main()
 {
     fastio
     int t=1;
-    //cin>>t;
     while(t--)
     {
-        int n,m;
-        cin>>n>>m;
+        int n,q,m;
+        cin>>n>>q;
+        m=n-1;
+        rep(i,n)cin>>arr[i];
         rep(i,m)
         {
             int a,b;
             cin>>a>>b;
-            adjLists[a-1].pb(b-1);
-            adjLists[b-1].pb(a-1);
+            --a,--b;
+            adjlist[a].push_back(b);
+            adjlist[b].push_back(a);
         }
-        DFS(0);
+        rep(i,q)
+        {
+            memset(visited,0,sizeof(visited));
+            myset.clear();
+            string s;
+            int start;
+            cin>>start>>s;
+            rep(j,s.size())myset.insert(s[j]);
+            DFS(start-1);
+            cout<<myset.size()<<endl;
+        }
     }
     return 0;
 }

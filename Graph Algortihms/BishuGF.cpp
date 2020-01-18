@@ -41,25 +41,29 @@ typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_nod
 //p.order_of_key(key) return index
 #define MAXN 1000005
 
-vector<int> adjLists[MAXN];
+vector<int> adjlist[MAXN];
 int visited[MAXN];
+int level[MAXN]={0};
+queue<int> q;
+int current;
 
-void addEdge(int src, int dest)
+void bfs()
 {
-    adjLists[src].push_back(dest);
-}
-
-void DFS(int vertex)
-{
-    visited[vertex] = true;
-    cout<<vertex<<" ";
-    vector<int>::iterator i;
-    for(i = adjLists[vertex].begin(); i != adjLists[vertex].end(); ++i)
+    while(!q.empty())
     {
-            if(!visited[*i])
+        current=q.front();
+        vector<int>::iterator it;
+        for(it=adjlist[current].begin();it!=adjlist[current].end();it++)
+        {
+            if(!visited[*it])
             {
-                DFS(*i);
+                visited[*it]=1;
+                q.push(*it);
+                level[*it]=level[current]+1;
             }
+        }
+        //cout<<current<<" ";
+        q.pop();
     }
 }
 
@@ -71,15 +75,34 @@ int32_t main()
     while(t--)
     {
         int n,m;
-        cin>>n>>m;
+        cin>>n;
+        m=n-1;
         rep(i,m)
         {
             int a,b;
             cin>>a>>b;
-            adjLists[a-1].pb(b-1);
-            adjLists[b-1].pb(a-1);
+            adjlist[a-1].pb(b-1);
+            adjlist[b-1].pb(a-1);
         }
-        DFS(0);
+        int qr;
+        cin>>qr;
+        int zz=0;
+        q.push(0);
+        visited[0]=1;
+        bfs();
+        int ans=INT_MAX,printans=0;
+        //rep(i,n)cout<<level[i]<<"-";
+        while(qr--)
+        {
+            int z;
+            cin>>z;
+            if(level[z-1]<ans)
+            {
+                ans=level[z-1];
+                printans=z;
+            }
+        }
+        cout<<printans<<endl;
     }
     return 0;
 }
