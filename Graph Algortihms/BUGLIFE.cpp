@@ -39,55 +39,74 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
-#include<bits/stdc++.h>
-using namespace std;
-vector<int> adjlist[100000];
-vector<bool> visited;
-int dp[1000006][26];
-char ch[1000006];
+vector<vector<int>> v;
+int level[3000]={0};
+bool vis[3000];
+int lol[1000005][2];
 
-void dfs(int u)
+void bfs(int s)
 {
-    int i;
-    visited[u]=true;
-    for(auto it:adjlist[u])
+    queue<int> q;
+    q.push(s);
+    level[s]=0;
+    vis[s]=true;
+    while(!q.empty())
     {
-        if( visited[it]==false)
+        int p=q.front();
+        q.pop();
+        rep(i,v[p].size())
         {
-            dfs(it);
-            for(i=0;i<26;i++)
-            dp[u][i]+=dp[it][i];
+            if(vis[v[p][i]]==false)
+            {
+                level[v[p][i]]=level[p]+1;
+                q.push(v[p][i]);
+                vis[v[p][i]]=true;
+            }
         }
     }
-    dp[u][ch[u]-97]++;
 }
 
-int main()
+void init(int n)
 {
-    int n,q,u,v,i;
-    cin>>n>>q;
-    b.assign(100004,false);
-    for(i=1;i<=n;i++)
-    cin>>ch[i];
-    int kk=n-1;
-    while(kk--)
+    rep(i,n+5)vis[i]=false;
+}
+
+int32_t main()
+{
+    fastio
+    int t=1,k=0;
+    cin>>t;
+    while(t--)
     {
-        cin>>u>>v;
-        adjlist[u].push_back(v);
-        adjlist[v].push_back(u);
-    }
-    dfs(1);
-    while(q--)
-    {
-        int x,sum=0;
-        string s;
-        cin>>x>>s;
-        int f[26]={0};
-        for(i=0;i<s.length();i++)f[s[i]-97]++;
-        for(i=0;i<26;i++)
+        int nodes,edges,x,y;
+        cin>>nodes>>edges;
+        v.resize(nodes+5);
+        v.clear();
+        rep(i,edges)
         {
-            if(dp[x][i]<=f[i])sum+=f[i]-dp[x][i];
+            cin>>x>>y;
+            v[x].push_back(y);
+            v[y].push_back(x);
+            lol[i][0]=x;
+            lol[i][1]=y;
         }
-        cout<<sum<<"\n";
+        init(nodes);
+        repre(i,1,nodes)
+        {
+            if(!vis[i])bfs(i);
+        }
+        int flag=0;
+        rep(i,edges)
+        {
+            if((level[lol[i][0]]-level[lol[i][1]])%2==0)
+            {
+                flag=1;
+                break;
+            }
+        }
+        k++;
+        if(flag)cout<<"Scenario #"<<k<<":\nSuspicious bugs found!\n";
+        else cout<<"Scenario #"<<k<<":\nNo suspicious bugs found!\n";
     }
+    return 0;
 }

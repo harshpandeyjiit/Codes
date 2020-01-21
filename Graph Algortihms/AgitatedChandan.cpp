@@ -39,55 +39,94 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
-#include<bits/stdc++.h>
-using namespace std;
-vector<int> adjlist[100000];
-vector<bool> visited;
-int dp[1000006][26];
-char ch[1000006];
-
-void dfs(int u)
+vector<pair<int,int>>v[100001];
+bool visited[100001];
+int dist[100001];
+void bfs(int start, int n)
 {
-    int i;
-    visited[u]=true;
-    for(auto it:adjlist[u])
+    queue<int>q;
+    q.push(start);
+    visited[start]=true;
+    while(!q.empty())
     {
-        if( visited[it]==false)
+        int temp;
+        temp=q.front();
+        q.pop();
+        for(int i=0;i<v[temp].size();i++)
         {
-            dfs(it);
-            for(i=0;i<26;i++)
-            dp[u][i]+=dp[it][i];
+            auto p=v[temp][i];
+            if(!visited[p.first])
+            {
+                dist[p.first]=dist[temp]+p.second;
+                visited[p.first]=true;
+                q.push(p.first);
+            }
         }
     }
-    dp[u][ch[u]-97]++;
+    int max=INT_MIN,ind=-1;
+    for(int i=1;i<=n;i++)
+    {
+        if(max<dist[i])
+        {
+            max=dist[i];
+            ind=i;
+        }
+    }
+    for(int i=1;i<=n;i++)
+    {
+        visited[i]=false;
+        dist[i]=0;
+    }
+    visited[ind]=true;
+    q.push(ind);
+    while(!q.empty())
+    {
+        int temp;
+        temp=q.front();
+        q.pop();
+        for(int i=0;i<v[temp].size();i++)
+        {
+            auto p=v[temp][i];
+            if(!visited[p.first])
+            {
+                dist[p.first]=dist[temp]+p.second;
+                visited[p.first]=true;
+                q.push(p.first);
+            }
+        }
+    }
+    int max1=INT_MIN;
+    for(int i=1;i<=n;i++)
+    {
+        if(max1<dist[i])max1=dist[i];
+    }
+    if(max1<100)cout<<0<<" "<<max1<<endl;
+    else if(max1>=100&&max1<=1000)cout<<100<<" "<<max1<<endl;
+    else if(max1>1000&&max1<=10000)cout<<1000<<" "<<max1<<endl;
+    else cout<<10000<<" "<<max1<<endl;
 }
 
-int main()
+int32_t main()
 {
-    int n,q,u,v,i;
-    cin>>n>>q;
-    b.assign(100004,false);
-    for(i=1;i<=n;i++)
-    cin>>ch[i];
-    int kk=n-1;
-    while(kk--)
+    int t;
+    cin>>t;
+    while(t--)
     {
-        cin>>u>>v;
-        adjlist[u].push_back(v);
-        adjlist[v].push_back(u);
-    }
-    dfs(1);
-    while(q--)
-    {
-        int x,sum=0;
-        string s;
-        cin>>x>>s;
-        int f[26]={0};
-        for(i=0;i<s.length();i++)f[s[i]-97]++;
-        for(i=0;i<26;i++)
+        int n;
+        cin>>n;
+        for(int i=1;i<=n;i++)
         {
-            if(dp[x][i]<=f[i])sum+=f[i]-dp[x][i];
+            v[i].clear();
+            visited[i]=false;
+            dist[i]=0;
         }
-        cout<<sum<<"\n";
+        for(int i=0;i<n-1;i++)
+        {
+            int f,s,w;
+            cin>>f>>s>>w;
+            v[f].push_back({s,w});
+            v[s].push_back({f,w});
+        }
+        bfs(1,n);
     }
 }

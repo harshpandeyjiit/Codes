@@ -9,8 +9,8 @@
 #define int long long
 #define mkp make_pair
 #define pb push_back
-#define ff first
-#define ss second
+#define F first
+#define S second
 #define debug1(a) cout<<a<<endl;
 #define debug2(a,b) cout<<a<<' '<<b<<endl;
 #define debug3(a,b,c) cout<<a<' '<<b<<' '<<c<<endl;
@@ -39,55 +39,73 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
-#include<bits/stdc++.h>
-using namespace std;
-vector<int> adjlist[100000];
-vector<bool> visited;
-int dp[1000006][26];
-char ch[1000006];
 
-void dfs(int u)
+#define llp 1000000007
+int t;
+int a[1002][1002];
+bool vt[1002][1002];
+int n, m;
+int maxi;
+int troop;
+
+void travel(int A, int b)
 {
-    int i;
-    visited[u]=true;
-    for(auto it:adjlist[u])
+    queue<pair<int,int> >q=queue<pair<int,int> >();
+    q.push({A,b});
+    int size=1;
+    vt[A][b]=true;
+    while(!q.empty())
     {
-        if( visited[it]==false)
+        auto P=q.front();
+        q.pop();
+        for(int i=-1;i<=1;i++)
         {
-            dfs(it);
-            for(i=0;i<26;i++)
-            dp[u][i]+=dp[it][i];
+            for(int j=-1;j<=1;j++)
+            {
+                if(i==0&&j==0)continue;
+                if(vt[P.F+i][P.S+j]==false && a[P.F+i][P.S+j]==1)
+                {
+                        vt[P.F+i][P.S+j]=true;
+                        size++;
+                        q.push({P.F+i,P.S+j});
+                }
+            }
         }
     }
-    dp[u][ch[u]-97]++;
+    maxi=max(maxi,size);
 }
 
-int main()
+int32_t main()
 {
-    int n,q,u,v,i;
-    cin>>n>>q;
-    b.assign(100004,false);
-    for(i=1;i<=n;i++)
-    cin>>ch[i];
-    int kk=n-1;
-    while(kk--)
+    fastio
+    int t=1;
+    cin>>t;
+    while(t--)
     {
-        cin>>u>>v;
-        adjlist[u].push_back(v);
-        adjlist[v].push_back(u);
-    }
-    dfs(1);
-    while(q--)
-    {
-        int x,sum=0;
-        string s;
-        cin>>x>>s;
-        int f[26]={0};
-        for(i=0;i<s.length();i++)f[s[i]-97]++;
-        for(i=0;i<26;i++)
+        maxi=0;
+        troop=0;
+        cin>>n>>m;
+        memset(a,0,sizeof(a));
+        memset(vt,false,sizeof(vt));
+        for(int i=1; i<=n;i++)
         {
-            if(dp[x][i]<=f[i])sum+=f[i]-dp[x][i];
+            for(int j=1; j<=m;j++)
+            {
+                cin>>a[i][j];
+            }
         }
-        cout<<sum<<"\n";
+        for(int i=1; i<=n; i++)
+        {
+            for(int j=1; j<=m;j++)
+            {
+                if(a[i][j]==1 && vt[i][j]==false)
+                {
+                    troop++;
+                    travel(i,j);
+                }
+            }
+        }
+        cout<<troop<<" "<<maxi<<"\n";
     }
+    return 0;
 }

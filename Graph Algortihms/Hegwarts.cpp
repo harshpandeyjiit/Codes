@@ -39,55 +39,68 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
-#include<bits/stdc++.h>
-using namespace std;
-vector<int> adjlist[100000];
-vector<bool> visited;
-int dp[1000006][26];
-char ch[1000006];
 
-void dfs(int u)
+void bfs(int n)
 {
-    int i;
-    visited[u]=true;
-    for(auto it:adjlist[u])
+    queue<int> q;
+    set<int> ss;
+    q.push(n);
+    ss.insert(n);
+    int steps=0;
+    while(!q.empty())
     {
-        if( visited[it]==false)
+        int temp=q.front();
+        q.pop();
+        if(temp==1&&n==1)
         {
-            dfs(it);
-            for(i=0;i<26;i++)
-            dp[u][i]+=dp[it][i];
+            cout<<steps<<endl;
+            return;
         }
+        else if(temp==1)
+        {
+            cout<<steps+1<<endl;
+            return;
+        }
+        if(temp==n-1)
+        {
+            steps++;
+            n--;
+        }
+        if(temp%3==0)
+        {
+            int prev=ss.size();
+            ss.insert(temp/3);
+            int next=ss.size();
+            if(next!=prev)
+            {
+                q.push(temp/3);
+            }
+        }
+        if(temp%2==0)
+        {
+            int prev=ss.size();
+            ss.insert(temp/2);
+            int next=ss.size();
+            if(next!=prev)
+            {
+                q.push(temp/2);
+            }
+        }
+        q.push(temp-1);
     }
-    dp[u][ch[u]-97]++;
 }
 
-int main()
+
+int32_t main()
 {
-    int n,q,u,v,i;
-    cin>>n>>q;
-    b.assign(100004,false);
-    for(i=1;i<=n;i++)
-    cin>>ch[i];
-    int kk=n-1;
-    while(kk--)
+    fastio
+    int t=1;
+    cin>>t;
+    while(t--)
     {
-        cin>>u>>v;
-        adjlist[u].push_back(v);
-        adjlist[v].push_back(u);
+        int n;
+        cin>>n;
+        bfs(n);
     }
-    dfs(1);
-    while(q--)
-    {
-        int x,sum=0;
-        string s;
-        cin>>x>>s;
-        int f[26]={0};
-        for(i=0;i<s.length();i++)f[s[i]-97]++;
-        for(i=0;i<26;i++)
-        {
-            if(dp[x][i]<=f[i])sum+=f[i]-dp[x][i];
-        }
-        cout<<sum<<"\n";
-    }
+    return 0;
 }

@@ -39,55 +39,34 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
-#include<bits/stdc++.h>
-using namespace std;
-vector<int> adjlist[100000];
-vector<bool> visited;
-int dp[1000006][26];
-char ch[1000006];
+#define MAXN 1e18+5
+vector<int> dp;
 
-void dfs(int u)
+int addNumbers(int n)
 {
-    int i;
-    visited[u]=true;
-    for(auto it:adjlist[u])
-    {
-        if( visited[it]==false)
-        {
-            dfs(it);
-            for(i=0;i<26;i++)
-            dp[u][i]+=dp[it][i];
-        }
-    }
-    dp[u][ch[u]-97]++;
+    if (n != 0)return n + addNumbers(n - 1);
+    else return n;
 }
 
-int main()
+int32_t main()
 {
-    int n,q,u,v,i;
-    cin>>n>>q;
-    b.assign(100004,false);
-    for(i=1;i<=n;i++)
-    cin>>ch[i];
-    int kk=n-1;
-    while(kk--)
+    fastio
+    int t=1;
+    cin>>t;
+    while(t--)
     {
-        cin>>u>>v;
-        adjlist[u].push_back(v);
-        adjlist[v].push_back(u);
-    }
-    dfs(1);
-    while(q--)
-    {
-        int x,sum=0;
-        string s;
-        cin>>x>>s;
-        int f[26]={0};
-        for(i=0;i<s.length();i++)f[s[i]-97]++;
-        for(i=0;i<26;i++)
+        int n,c;
+        cin>>n>>c;
+        int dpc=(n*(n+1))/2;
+        if(n<dpc)
         {
-            if(dp[x][i]<=f[i])sum+=f[i]-dp[x][i];
+            cout<<n<<endl;
         }
-        cout<<sum<<"\n";
+        else if(n==dpc)cout<<0<<endl;
+        else
+        {
+            cout<<(n-c)%(c)<<endl;
+        }
     }
+    return 0;
 }
