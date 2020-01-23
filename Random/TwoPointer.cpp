@@ -56,7 +56,7 @@ int32_t main()
             cin>>arr[i];
             sum[i]=sum[i-1]+arr[i];
         }
-        int left=0,right=0,ans=0,maxi,temp=0;
+        int left=0,right=1,ans=1,maxi,temp=0;
         myqueue.insert(arr[0]);
         myqueue.insert(arr[1]);
         while(right<n && left<n)
@@ -73,9 +73,9 @@ int32_t main()
                 }
                 else
                 {
-                    left++;
-                    auto it=myqueue.find(arr[left-1]);
+                    auto it=myqueue.find(arr[left]);
                     myqueue.erase(it);
+                    left++;
                 }
             }
             else
@@ -89,9 +89,9 @@ int32_t main()
                 }
                 else
                 {
-                    left++;
-                    auto it=myqueue.find(arr[left-1]);
+                    auto it=myqueue.find(arr[left]);
                     myqueue.erase(it);
+                    left++;
                 }
             }
         }

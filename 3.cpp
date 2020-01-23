@@ -30,7 +30,7 @@
 #define fastio ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
 #define sumofdigits(sum,num) int sum = 0; while (n != 0) { sum = sum + n % 10; n = n/10; }
 #define int2str(str,n) n=boost::lexical_cast<int>(str);
-#define float2str(str,n) n=boost::lexical_cast<float>(str);
+#define flagoat2str(str,n) n=boost::lexical_cast<flagoat>(str);
 using namespace __gnu_pbds;
 using namespace std;
 #define Endl endl
@@ -39,63 +39,54 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
+int n,f=0,flag=0;
 int32_t main()
 {
     fastio
     int t=1;
+    cin>>t;
     while(t--)
     {
-        multiset<int> myqueue;
-        int n,k;
-        cin>>n>>k;
-        int arr[n],sum[n]={0};
-        cin>>arr[0];
-        sum[0]=arr[0];
-        repr(i,1,n)
+        f=0,flag=0;
+		cin>>n;
+		for(int i=2;i*i<n;i++)
         {
-            cin>>arr[i];
-            sum[i]=sum[i-1]+arr[i];
-        }
-        int left=0,right=0,ans=0,maxi,temp=0;
-        myqueue.insert(arr[0]);
-        myqueue.insert(arr[1]);
-        while(right<n && left<n)
+			if(n%i==0)
+            {
+				f=i;
+				break;
+			}
+		}
+		if(f==0)
         {
-            maxi=*myqueue.rbegin();
-            if(left==0)
+			cout<<"NO"<<endl;
+		}
+		else
+        {
+			n=n/f;
+			for(int i=f+1;i*i<=n;i++)
             {
-                temp=sum[right];
-                if(temp+k>=(maxi*(right+1)))
+				if(n%i==0)
                 {
-                    ans=max(ans,right-left+1);
-                    right++;
-                    myqueue.insert(arr[right]);
-                }
-                else
-                {
-                    left++;
-                    auto it=myqueue.find(arr[left-1]);
-                    myqueue.erase(it);
-                }
-            }
-            else
-            {
-                temp=sum[right]-sum[left-1];
-                if(temp+k>=(maxi*(right-left+1)))
-                {
-                    ans=max(ans,right-left+1);
-                    right++;
-                    myqueue.insert(arr[right]);
-                }
-                else
-                {
-                    left++;
-                    auto it=myqueue.find(arr[left-1]);
-                    myqueue.erase(it);
-                }
-            }
-        }
-        cout<<ans<<endl;
-    }
+				    if(i==n/i||f==n/i)
+                    {
+				        cout<<"NO"<<endl;
+				        flag=1;
+				        break;
+
+				    }
+					else
+                    {
+					    cout<<"YES"<<endl;
+					    cout<<f<<" "<<i<<" "<<n/i<<endl;
+                        flag=1;
+					    break;
+
+					}
+				}
+			}
+			if(flag==0)cout<<"NO"<<endl;
+		}
+	}
     return 0;
 }
