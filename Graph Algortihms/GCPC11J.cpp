@@ -39,68 +39,48 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
-#define MAXN 1000005
-vector<int> adjlist[MAXN];
-int previ[MAXN]={0};
-int visited[MAXN]={0};
-int n;
-void bfs(int a,int b)
+int t,n,x,y,ans,node;
+vector <int> v[100005];
+bool visited[100005];
+
+void dfs(int x,int pos)
 {
-    memset(visited,0,sizeof(visited));
-    queue<int> q;
-    int current;
-    q.push(a);
-    previ[a]++;
-    visited[a]++;
-    int count=b;
-    while(!q.empty() && count)
-    {
-        current=q.front();
-        vector<int>::iterator it;
-        for(it=adjlist[current].begin();it!=adjlist[current].end();it++)
-        {
-            if(!visited[*it])
-            {
-                previ[*it]++;
-                visited[*it]=1;
-                q.push(*it);
-            }
-        }
-        count--;
-        q.pop();
-    }
+	visited[x]=true;
+	if(pos>ans)
+	{
+		ans=pos;
+		node=x;
+	}
+	for(int i=0;i<v[x].size();i++)
+	{
+		if(!visited[v[x][i]])
+			dfs(v[x][i],pos+1);
+	}
 }
 
 int32_t main()
 {
     fastio
-    int t=1;
-    cin>>t;
-    while(t--)
-    {
-        memset(previ,0,sizeof(previ));
-        rep(i,MAXN)
-        {
-            adjlist[i].clear();
-        }
-        int r,m,flag=1;
-        cin>>n>>r>>m;
-        rep(i,r)
-        {
-            int a,b;
-            cin>>a>>b;
-            adjlist[a].push_back(b);
-            adjlist[b].push_back(a);
-        }
-        rep(i,m)
-        {
-            int a,b;
-            cin>>a>>b;
-            bfs(a,b);
-        }
-        repre(i,1,n)if(previ[i]!=1)flag=0;
-        if(flag)cout<<"Yes"<<endl;
-        else cout<<"No"<<endl;
-    }
-    return 0;
+	cin>>t;
+	while(t--)
+	{
+		node=0;
+		ans=0;
+		memset(visited,false,sizeof(visited));
+		for(int i=0;i<100005;i++)
+			v[i].clear();
+		cin>>n;
+		for(int i=0;i<n-1;i++)
+		{
+			cin>>x>>y;
+			v[x].pb(y);
+			v[y].pb(x);
+		}
+		dfs(0,0);
+		ans=0;
+		memset(visited,false,sizeof(visited));
+		dfs(node,0);
+		if(ans%2)cout<<ans/2+1<<"\n";
+		else cout<<ans/2<<"\n";
+	}
 }

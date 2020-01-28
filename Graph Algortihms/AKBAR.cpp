@@ -26,11 +26,13 @@
 #define ust unordered_set<int>
 #define mst multiset<int>
 #define pq priority_queue
+#define clr1(arr) memset(arr,-1,sizeof(arr));
+#define clr0(arr) memset(arr,0,sizeof(arr));
 #define mpq priority_queue<int,vector<int>,greater<int> >
 #define fastio ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
 #define sumofdigits(sum,num) int sum = 0; while (n != 0) { sum = sum + n % 10; n = n/10; }
 #define int2str(str,n) n=boost::lexical_cast<int>(str);
-#define flagoat2str(str,n) n=boost::lexical_cast<flagoat>(str);
+#define float2str(str,n) n=boost::lexical_cast<float>(str);
 using namespace __gnu_pbds;
 using namespace std;
 #define Endl endl
@@ -39,54 +41,73 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
-int n,f=0,flag=0;
+const int maxn=1000009;
+vector<int>adj[maxn];
+int dist[maxn];
+int visited[maxn];
+int t,n,r,m,k,s;
+int flag;
+void bfs(int city,int power)
+{
+  dist[city]=0;
+  visited[city]=1;
+  queue<int>q;
+  q.push(city);
+  while(q.empty()==false)
+  {
+    int temp=q.front();
+    q.pop();
+    int newDist=dist[temp]+1;
+    if(newDist>power)continue;
+    rep(i,adj[temp].size())
+    {
+      int v=adj[temp][i];
+      if(visited[v]==0 && dist[v]!=-1){flag=1;return;}
+      else if(visited[v]==0 && dist[v]==-1)
+      {
+        visited[v]=1;
+        dist[v]=newDist;
+        q.push(v);
+      }
+    }
+  }
+}
 int32_t main()
 {
-    fastio
-    int t=1;
-    cin>>t;
-    while(t--)
+  fastio
+  cin>>t;
+  while(t--){
+    flag=0;
+    clr1(dist);
+    clr0(visited);
+    cin>>n>>r>>m;
+    rep(i,r){int u,v;cin>>u>>v;adj[u].pb(v);adj[v].pb(u);}
+    vector<pi >query;
+    while(m--){cin>>k>>s;query.pb({k,s});}
+    rep(i,query.size())
     {
-        f=0,flag=0;
-		cin>>n;
-		for(int i=2;i*i<n;i++)
+      k=query[i].ff;
+      s=query[i].ss;
+      if(dist[k]!=-1 && visited[k]!=0){flag=1;break;}
+      bfs(k,s);
+      if(flag)break;
+    }
+    if(flag)cout<<"No\n";
+    else
+    {
+      repre(i,1,n)
+      {
+        if(dist[i]==-1)
         {
-			if(n%i==0)
-            {
-				f=i;
-				break;
-			}
-		}
-		if(f==0)
-        {
-			cout<<"NO"<<endl;
-		}
-		else
-        {
-			n=n/f;
-			for(int i=f+1;i*i<=n;i++)
-            {
-				if(n%i==0)
-                {
-				    if(i==n/i||f==n/i)
-                    {
-				        cout<<"NO"<<endl;
-				        flag=1;
-				        break;
+          flag=1;
+          break;
+        }
+      }
+      if(flag)cout<<"No\n";
+      else cout<<"Yes\n";
+    }
 
-				    }
-					else
-                    {
-					    cout<<"YES"<<endl;
-					    cout<<f<<" "<<i<<" "<<n/i<<endl;
-                        flag=1;
-					    break;
-
-					}
-				}
-			}
-			if(flag==0)cout<<"NO"<<endl;
-		}
-	}
-    return 0;
+    repre(i,1,n)adj[i].clear();
+  }
+  return 0;
 }

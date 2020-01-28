@@ -33,6 +33,8 @@
 #define float2str(str,n) n=boost::lexical_cast<float>(str);
 using namespace __gnu_pbds;
 using namespace std;
+#define Endl endl
+#define ar(n) int arr[n]
 typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> orderedSet;
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
@@ -41,20 +43,28 @@ int32_t main()
 {
     fastio
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--)
     {
-        int n;
+        int i,n;
         cin>>n;
-        vector<int> v;
+        vector<int> v(n);
+        int count=0;
+        rep(i,n)cin>>v[i];
+        int k=1;
+        int dp[5001];
         rep(i,n)
         {
-            int tmp;
-            cin>>tmp;
-            v.push_back(tmp);
+            k=1;
+            memset(dp,0,sizeof(dp));
+            repr(j,i,n)
+            {
+                if(v[j]<=5000)dp[v[j]]++;
+                while(dp[k])k++;
+                count+=k;
+            }
         }
-        auto pos=lower_bound(v.begin(),v.end(),3);
-        cout<<v.end()-pos<<endl;
+        cout<<count<<endl;
     }
     return 0;
 }
