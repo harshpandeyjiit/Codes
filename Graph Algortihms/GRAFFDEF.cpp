@@ -34,23 +34,60 @@
 using namespace __gnu_pbds;
 using namespace std;
 #define Endl endl
+#define coud(a,d) cout << fixed << showpoint << setprecision(d) << a;
 #define ar(n) int arr[n]
 typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> orderedSet;
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
-#define MAXN 1005
-
-int n,m;
-vector<int> adj[MAXN];
+int n,m,x,y; // number of nodes
+vector<vector<int>> adj; // adjacency list of graph
 
 vector<bool> visited;
 vector<int> tin, low;
-int timer;
+vector<pi> bridges;
+int timer,cnt=0;
 
-void IS_BRIDGE(int a,int b)
+const int MAXN = 500043;;
+int p[MAXN]; int sizes[MAXN];
+
+vector<int> g[MAXN];
+int findSet(int i)
 {
-    cout<<a<<" "<<b<<endl;
+	return (p[i]==i)? i : p[i]=findSet(p[i]);
+}
+
+bool isSameSet(int i, int j)
+{
+	return findSet(i) == findSet(j);
+}
+
+void join(int i, int j)
+{
+	if (!isSameSet(i,j))
+	{
+		int x = findSet(i),y = findSet(j);
+		if(sizes[x] < sizes[y])
+        {
+			p[x] = y;
+			sizes[y]+=sizes[x];
+
+		}
+        else
+        {
+			p[y] = x;
+			sizes[x]+=sizes[y];
+		}
+	}
+}
+
+void initialiseUnionFind()
+{
+	for(int i=0;i<MAXN;i++)
+    {
+		p[i] = i;
+		sizes[i] = 1;
+	}
 }
 
 void dfs(int v, int p = -1)
@@ -68,7 +105,11 @@ void dfs(int v, int p = -1)
         {
             dfs(to, v);
             low[v] = min(low[v], low[to]);
-            if (low[to] > tin[v])IS_BRIDGE(v, to);
+            if (low[to] > tin[v])bridges.push_back({v, to});
+            else
+            {
+            	join(v, to);
+            }
         }
     }
 }
@@ -88,19 +129,25 @@ void find_bridges()
 int32_t main()
 {
     fastio
-    int t=1;
-    //cin>>t;
-    while(t--)
-    {
-        cin>>n>>m;
-        rep(i,m)
-        {
-            int a,b;
-            cin>>a>>b;
-            adj[a].push_back(b);
-            adj[b].push_back(a);
-        }
-        find_bridges();
+    cin>>n>>m;
+    initialiseUnionFind();
+    adj.resize(n);
+    rep(i,m){
+    	cin>>x>>y;
+    	x--; y--;
+    	adj[x].push_back(y);
+    	adj[y].push_back(x);
     }
+	find_bridges();
+	double ans = 1.0;
+	rep(i,MAXN)
+    {
+		int par = findSet(i);
+		if(i == par)
+        {
+			ans -= (sizes[par]*(sizes[par]-1))*1.0/(1LL * n * (n-1));
+		}
+	}
+	coud(ans, 10);
     return 0;
 }

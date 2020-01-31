@@ -43,14 +43,24 @@ typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_nod
 
 int n,m;
 vector<int> adj[MAXN];
-
+int tcase;
 vector<bool> visited;
 vector<int> tin, low;
-int timer;
+vector<pair<int,int>> printpairs;
 
-void IS_BRIDGE(int a,int b)
+int timer,countr=0,call=0;
+
+void IS_BRIDGE(int n)
 {
-    cout<<a<<" "<<b<<endl;
+    cout<<"Caso #"<<++call<<endl;
+    if(countr==0)
+    {
+        cout<<"Sin bloqueos"<<Endl;
+        return;
+    }
+    cout<<countr<<endl;
+    sort(printpairs.begin(),printpairs.end());
+    rep(i,countr)cout<<printpairs[i].first<<" "<<printpairs[i].second<<Endl;
 }
 
 void dfs(int v, int p = -1)
@@ -68,7 +78,13 @@ void dfs(int v, int p = -1)
         {
             dfs(to, v);
             low[v] = min(low[v], low[to]);
-            if (low[to] > tin[v])IS_BRIDGE(v, to);
+            if (low[to] > tin[v])
+            {
+                int z=min(v,to);
+                int zz=max(v,to);
+                printpairs.push_back({z,zz});
+                ++countr;
+            }
         }
     }
 }
@@ -76,10 +92,10 @@ void dfs(int v, int p = -1)
 void find_bridges()
 {
     timer = 0;
-    visited.assign(n, false);
-    tin.assign(n, -1);
-    low.assign(n, -1);
-    for (int i = 0; i < n; ++i)
+    visited.assign(n+1, false);
+    tin.assign(n+1, -1);
+    low.assign(n+1, -1);
+    for (int i = 1; i <=n; ++i)
     {
         if (!visited[i])dfs(i);
     }
@@ -88,10 +104,14 @@ void find_bridges()
 int32_t main()
 {
     fastio
-    int t=1;
-    //cin>>t;
-    while(t--)
+    cin>>tcase;
+    rep(zz,tcase)
     {
+        visited.clear();
+        tin.clear();
+        low.clear();
+        printpairs.clear();
+        rep(i,MAXN)adj[i].clear();
         cin>>n>>m;
         rep(i,m)
         {
@@ -100,7 +120,9 @@ int32_t main()
             adj[a].push_back(b);
             adj[b].push_back(a);
         }
+        countr=0;
         find_bridges();
+        IS_BRIDGE(n);
     }
     return 0;
 }
