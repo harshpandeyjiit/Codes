@@ -6,7 +6,7 @@
 #include<bits/stdc++.h>
 #include<ext/pb_ds/assoc_container.hpp>
 #include<ext/pb_ds/tree_policy.hpp>
-#define int long long
+//#define int long long
 #define mkp make_pair
 #define pb push_back
 #define ff first
@@ -19,10 +19,9 @@
 #define repre(i,a,b)for(int i=a;i<=b;i++)
 #define pi pair<int,int>
 #define pii pair<int,pi>
-#define mp map<int,int>
+//#define mp map<int,int>
 #define iofile freopen("input.txt", "r", stdin);freopen("output.txt", "w", stdout);
 #define ump unordered_map<int,int>
-#define st set<int>
 #define ust unordered_set<int>
 #define mst multiset<int>
 #define pq priority_queue
@@ -39,75 +38,72 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
-#define MAXN 10005
-int n,m,ans=0; // number of nodes
-vector<int> adj[MAXN]; // adjacency list of graph
+vector<pair<long long,long long>>v[100001];
+map<long long,long long>mp;
 
-vector<bool> visited;
-vector<int> tin, low;
-int timer;
-vector<int> artpoints;
-
-void dfs(int v, int p = -1)
+void bridges(long long u, bool* visited, long long* parent, long long* low, long long* disc)
 {
-    visited[v] = true;
-    tin[v] = low[v] = timer++;
-    int children=0;
-    for (int to : adj[v])
+    visited[u]=true;
+    static int time=0;
+    disc[u]=low[u]= ++time;
+    for(int i=0;i<v[u].size();i++)
     {
-        if (to == p) continue;
-        if (visited[to])
+        pair<long long,long long>p=v[u][i];
+        long long v=p.first;
+        if(!visited[v])
         {
-            low[v] = min(low[v], tin[to]);
-        }
-        else
-        {
-            dfs(to, v);
-            low[v] = min(low[v], low[to]);
-            if (low[to] >= tin[v] && p!=-1)
+            parent[v]=u;
+            bridges(v,visited,parent,low,disc);
+            low[u]=min(low[u],low[v]);
+            if(low[v]>disc[u])
             {
-                ans++;
-                artpoints.push_back(v);
+                mp[p.second]=1;
             }
-            ++children;
         }
-    }
-    if(p == -1 && children > 1)
-    {
-        ans++;
-        artpoints.push_back(v);
+        else if(v!=parent[u])
+        low[u]=min(disc[v],low[u]);
     }
 }
 
-void find_cutpoints()
+void solve(long long n, long long m,long long q)
 {
-    timer = 0;
-    visited.assign(n+1, false);
-    tin.assign(n+1, -1);
-    low.assign(n+1, -1);
-    for (int i = 1; i <=n; ++i)
+    bool* visited=new bool[n];
+    long long* parent=new long long[n];
+    long long* low=new long long[n];
+    long long* disc=new long long[n];
+    for(int i=1;i<=n;i++)
     {
-        if (!visited[i])dfs (i);
+        visited[i]=false;
+        parent[i]=-1;
     }
-}
-
-int32_t main()
-{
-    fastio
-    int t=1;
-    while(t--)
+    for(int i=1;i<=n;i++)
     {
-        cin>>n>>m;
-        rep(i,m)
+        if(!visited[i])
         {
-            int a,b;
-            cin>>a>>b;
-            adj[a].push_back(b);
-            adj[b].push_back(a);
+            bridges(i,visited,parent,low,disc);
         }
-        find_cutpoints();
-        cout<<ans<<endl;
-        rep(i,ans)cout<<artpoints[i]<<endl;
+    }
+}
+
+int main()
+{
+    long long n,m,q;
+    scanf("%lld %lld %lld",&n,&m,&q);
+    for(int i=0;i<m;i++)
+    {
+        long long f,s, id;
+        scanf("%lld %lld %lld",&f,&s,&id);
+        v[f].push_back({s,id});
+        v[s].push_back({f,id});
+    }
+    solve(n,m,q);
+    while(q--)
+    {
+        long long chk;
+        scanf("%lld",&chk);
+        if(mp[chk]==1)
+        printf("YES\n");
+        else printf("no\n");
     }
     return 0;
 }

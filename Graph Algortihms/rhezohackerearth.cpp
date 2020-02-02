@@ -22,7 +22,6 @@
 #define mp map<int,int>
 #define iofile freopen("input.txt", "r", stdin);freopen("output.txt", "w", stdout);
 #define ump unordered_map<int,int>
-#define st set<int>
 #define ust unordered_set<int>
 #define mst multiset<int>
 #define pq priority_queue
@@ -39,75 +38,58 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
-#define MAXN 10005
-int n,m,ans=0; // number of nodes
-vector<int> adj[MAXN]; // adjacency list of graph
+#define MAXN 100005
 
-vector<bool> visited;
-vector<int> tin, low;
-int timer;
-vector<int> artpoints;
-
-void dfs(int v, int p = -1)
+vector<int>v[MAXN];
+bool vis[MAXN];
+int n,num[MAXN],parent[MAXN],low[MAXN];
+stack<int> st;
+set<pair<int,int> >ans;
+set<pair<int,int> >::iterator it;
+void dfs(int u)
 {
-    visited[v] = true;
-    tin[v] = low[v] = timer++;
-    int children=0;
-    for (int to : adj[v])
-    {
-        if (to == p) continue;
-        if (visited[to])
-        {
-            low[v] = min(low[v], tin[to]);
-        }
-        else
-        {
-            dfs(to, v);
-            low[v] = min(low[v], low[to]);
-            if (low[to] >= tin[v] && p!=-1)
-            {
-                ans++;
-                artpoints.push_back(v);
-            }
-            ++children;
-        }
-    }
-    if(p == -1 && children > 1)
-    {
-        ans++;
-        artpoints.push_back(v);
-    }
+	static int time=1;
+	int children=0;
+	vis[u]=1;
+	num[u]=low[u]=time++;
+	for(int i=0;i<v[u].size();i++)
+	{
+		int curr=v[u][i];
+		if(!vis[curr])
+		{
+			children++;
+			parent[curr]=u;
+			dfs(curr);
+			low[u]=min(low[u],low[curr]);
+			if(low[curr]>num[u]){ans.insert(make_pair(u,curr));ans.insert(make_pair(curr,u));}
+		}
+		else if(curr!=parent[u])
+			low[u]=min(low[u],num[curr]);
+	}
 }
-
-void find_cutpoints()
-{
-    timer = 0;
-    visited.assign(n+1, false);
-    tin.assign(n+1, -1);
-    low.assign(n+1, -1);
-    for (int i = 1; i <=n; ++i)
-    {
-        if (!visited[i])dfs (i);
-    }
-}
-
 int32_t main()
 {
-    fastio
-    int t=1;
-    while(t--)
+	int n,m,q;
+	cin>>n>>m;
+	int i,a[MAXN],b[MAXN];
+	rep(i,m)
+	{
+		cin>>a[i]>>b[i];
+		v[a[i]].push_back(b[i]);
+		v[b[i]].push_back(a[i]);
+	}
+	repre(i,1,n)
     {
-        cin>>n>>m;
-        rep(i,m)
-        {
-            int a,b;
-            cin>>a>>b;
-            adj[a].push_back(b);
-            adj[b].push_back(a);
-        }
-        find_cutpoints();
-        cout<<ans<<endl;
-        rep(i,ans)cout<<artpoints[i]<<endl;
+        if(!vis[i])dfs(i);
     }
-    return 0;
+	cin>>q;
+	while(q--)
+	{
+		int x;
+		cin>>x;
+        --x;
+		if(ans.find(make_pair(a[x],b[x]))!=ans.end())printf("Unhappy\n");
+		else printf("Happy\n");
+	}
+	return 0;
 }
