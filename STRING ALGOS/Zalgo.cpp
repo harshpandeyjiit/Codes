@@ -5,13 +5,13 @@ using namespace std;
 int P[SIZE * 2];
 int ans=0;
 
-string convertToNewString(const string &s) {
+string convertToNewString(const string &s)
+{
     string newString = "@";
-
-    for (int i = 0; i < s.size(); i++) {
+    for (int i = 0; i < s.size(); i++)
+    {
         newString += "#" + s.substr(i, 1);
     }
-
     newString += "#$";
     return newString;
 }
@@ -20,8 +20,7 @@ bool longestPalindromeSubstring(const string &s)
 {
     memset(P,0,sizeof(P));
     string Q = convertToNewString(s);
-    int c = 0, r = 0;                // current center, right limit
-
+    int c = 0, r = 0;
     for (int i = 1; i < Q.size() - 1; i++)
     {
         int iMirror = c - (i - c);

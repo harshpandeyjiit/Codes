@@ -39,39 +39,73 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
-vector<int> discovered;
-vector<int> adjList;
+
+const int maxn=300009;
+vector<int>adj[maxn];
+int par[maxn];
+int low[maxn];
+int disc[maxn];
+int visited[maxn];
+int n,m,w;
+int arr[maxn];
+int ans;
+int flag;
+int s;
+int ct=1;
+int dfs(int v,int p,int root)
+{
+    disc[v]=low[v]=ct++;
+    visited[v]=1;
+    int child=0;
+    int sum=arr[v];
+    par[v]=p;
+    int pre=0;
+    int pre2=1;
+    int art=0;
+    for(auto u:adj[v])
+    {
+        if(visited[u]==0)
+        {
+            child++;
+            par[u]=v;
+            int sumChild=dfs(u,v,root);
+            low[v]=min(low[v],low[u]);
+            sum+=sumChild;
+             if(v!=root && low[u]>=disc[v])
+            {
+                art=1;
+                flag=1;
+                int m2=sumChild;
+                pre2+=m2;
+                pre=pre^m2;
+            }
+        }
+        else if(par[v]!=u)low[v]=min(low[v],disc[u]);
+    }
+    if(art)
+    {
+        int rem=s-pre2-arr[v];
+        pre=pre^rem;
+        ans=max(ans,pre);
+    }
+    return sum;
+}
 int32_t main()
 {
-    fastio
-    int t=1;
-    //cin>>t;
-    while(t--)
-    {
-        int n, m;
-        while(cin >> n >> m, n != 0 || m != 0)
-        {
-            discovered.clear();
-            discovered.assign(n+1, 0);
-            adjList.clear();
-            adjList.resize(n+1);
-            topoSort.clear();
-            int u, v;
-            while(m--)
-            {
-                cin >> u >> v;
-                adjList[u].push_back(v);
-            }
-            for(int i = 1; i <= n; ++i)
-            {
-                if(!discovered[i]) dfs(i);
-            }
-            for(int i = n-1; i >= 0; --i)
-            {
-                cout << topoSort[i];
-                if(i) cout << ' ';
-            }
-            cout << '\n';
-    }
-    return 0;
+      fastio
+      cin>>n>>m;
+      repre(i,1,n){cin>>arr[i];s+=arr[i];}
+      repre(i,1,m)
+      {
+          int u,v;
+          cin>>u>>v;
+          adj[u].pb(v);
+          adj[v].pb(u);
+      }
+      repre(i,1,n){
+          if(visited[i]==0)dfs(i,0,i);
+      }
+      if(flag==0)ans=-1;
+      cout<<ans<<endl;
+      return 0;
 }
