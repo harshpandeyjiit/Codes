@@ -39,68 +39,73 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
-#define MAXN 1000005
-vector<int> adjlist[MAXN];
-int previ[MAXN]={0};
-int visited[MAXN]={0};
-int n;
-void bfs(int a,int b)
+
+const int maxn=300009;
+vector<int>adj[maxn];
+int par[maxn];
+int low[maxn];
+int disc[maxn];
+int visited[maxn];
+int n,m,w;
+int arr[maxn];
+int ans;
+int flag;
+int s;
+int ct=1;
+int dfs(int v,int p,int root)
 {
-    memset(visited,0,sizeof(visited));
-    queue<int> q;
-    int current;
-    q.push(a);
-    previ[a]++;
-    visited[a]++;
-    int count=b;
-    while(!q.empty() && count)
+    disc[v]=low[v]=ct++;
+    visited[v]=1;
+    int child=0;
+    int sum=arr[v];
+    par[v]=p;
+    int pre=0;
+    int pre2=0;
+    int art=0;
+    for(auto u:adj[v])
     {
-        current=q.front();
-        vector<int>::iterator it;
-        for(it=adjlist[current].begin();it!=adjlist[current].end();it++)
+        if(visited[u]==0)
         {
-            if(!visited[*it])
+            child++;
+            par[u]=v;
+            int sumChild=dfs(u,v,root);
+            low[v]=min(low[v],low[u]);
+            sum+=sumChild;
+             if(v!=root && low[u]>=disc[v])
             {
-                previ[*it]++;
-                visited[*it]=1;
-                q.push(*it);
+                art=1;
+                flag=1;
+                int m2=sumChild;
+                pre2+=m2;
+                pre=pre^m2;
             }
         }
-        count--;
-        q.pop();
+        else if(par[v]!=u)low[v]=min(low[v],disc[u]);
     }
+    if(art)
+    {
+        int rem=s-pre2-arr[v];
+        pre=pre^rem;
+        ans=max(ans,pre);
+    }
+    return sum;
 }
-
 int32_t main()
 {
-    fastio
-    int t=1;
-    cin>>t;
-    while(t--)
-    {
-        memset(previ,0,sizeof(previ));
-        rep(i,MAXN)
-        {
-            adjlist[i].clear();
-        }
-        int r,m,flag=1;
-        cin>>n>>r>>m;
-        rep(i,r)
-        {
-            int a,b;
-            cin>>a>>b;
-            adjlist[a].push_back(b);
-            adjlist[b].push_back(a);
-        }
-        rep(i,m)
-        {
-            int a,b;
-            cin>>a>>b;
-            bfs(a,b);
-        }
-        repre(i,1,n)if(previ[i]!=1)flag=0;
-        if(flag)cout<<"Yes"<<endl;
-        else cout<<"No"<<endl;
-    }
-    return 0;
+  fastio
+  cin>>n>>m;
+  repre(i,1,n){cin>>arr[i];s+=arr[i];}
+  repre(i,1,m)
+  {
+      int u,v;
+      cin>>u>>v;
+      adj[u].pb(v);
+      adj[v].pb(u);
+  }
+  repre(i,1,n){
+      if(visited[i]==0)dfs(i,0,i);
+  }
+  if(flag==0)ans=-1;
+  cout<<ans<<endl;
+  return 0;
 }
