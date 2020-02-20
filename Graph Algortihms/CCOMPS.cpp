@@ -42,11 +42,10 @@ typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_nod
 #define MAXN 100005
 vector<int> adjlist[MAXN];
 bool visited[MAXN];
-int color=0,size=0;
+int color=0;
 
 void dfs(int v)
 {
-    ++size;
     visited[v]=true;
     for(auto to: adjlist[v])
     {
@@ -65,7 +64,7 @@ int32_t main()
     while(tcase--)
     {
         memset(visited,false,sizeof(visited));
-        int n,m,a,b,od=0,ev=0;
+        int n,m,a,b;
         cin>>n>>m;
         rep(i,m)
         {
@@ -78,13 +77,11 @@ int32_t main()
         {
             if(!visited[i])
             {
-                size=0;
+                ++color;
                 dfs(i);
-                if(size%2)od+=size;
-                else ev+=size;
             }
         }
-        cout<<od-ev<<endl;
+        cout<<color<<endl;
     }
     return 0;
 }

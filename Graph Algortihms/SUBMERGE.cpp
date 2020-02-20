@@ -42,19 +42,30 @@ typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_nod
 #define MAXN 100005
 vector<int> adjlist[MAXN];
 bool visited[MAXN];
-int color=0,size=0;
+vector<int> tin,low;
+int timer=0,ans=0;
 
-void dfs(int v)
+void dfs(int v,int p=-1)
 {
-    ++size;
     visited[v]=true;
+    tin[v]=low[v]=timer++;
+    int child=0;
     for(auto to: adjlist[v])
     {
-        if(!visited[to])
+        if(to==p)continue;
+        if(visited[to])
         {
-            dfs(to);
+            low[v]=min(low[v],tin[to]);
+        }
+        else
+        {
+            dfs(to,v);
+            low[v]=min(low[to],low[v]);
+            if(low[to]>=tin[v] && p!=-1)ans++;
+            ++child;
         }
     }
+    if(p==-1 && child>1)ans++;
 }
 
 int32_t main()
@@ -62,29 +73,30 @@ int32_t main()
     fastio
     int tcase=1;
     //cin>>tcase;
-    while(tcase--)
+    while(1)
     {
-        memset(visited,false,sizeof(visited));
-        int n,m,a,b,od=0,ev=0;
+        int n,m;
         cin>>n>>m;
-        rep(i,m)
+        if(n==0 && m==0)return 0;
+        else
         {
-            cin>>a>>b;
-            --a,--b;
-            adjlist[a].push_back(b);
-            adjlist[b].push_back(a);
-        }
-        rep(i,n)
-        {
-            if(!visited[i])
+            ans=0;
+            timer=0;
+            tin.assign(n,-1);
+            low.assign(n,-1);
+            memset(visited,false,sizeof(visited));
+            rep(i,n)adjlist[i].clear();
+            int a,b;
+            while(m--)
             {
-                size=0;
-                dfs(i);
-                if(size%2)od+=size;
-                else ev+=size;
+                cin>>a>>b;
+                --a,--b;
+                adjlist[a].push_back(b);
+                adjlist[b].push_back(a);
             }
+            rep(i,n)if(!visited[i])dfs(i);
+            cout<<ans<<endl;
         }
-        cout<<od-ev<<endl;
     }
     return 0;
 }
