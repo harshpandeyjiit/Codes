@@ -39,25 +39,59 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
+vector<pair<int,int>>adjlist[100001];
+bool visited[100001];
+int dist[100001];
+void bfs(int n, int start)
+{
+    visited[start]=true;
+    queue<int>q;
+    q.push(start);
+    while(!q.empty())
+    {
+        int temp=q.front();
+        q.pop();
+        for(int i=0;i<adjlist[temp].size();i++)
+        {
+            auto p = adjlist[temp][i];
+            if(visited[p.first]==false)
+            {
+                dist[p.first]=dist[temp]^p.second;
+                q.push(p.first);
+                visited[p.first]=true;
+            }
+        }
+    }
+    int res=0;
+    for(int i=1;i<=n;i++)
+    {
+        if(adjlist[i].size()==1&&dist[i]%2)res++;
+    }
+    cout<<res<<endl;
+}
 
 int32_t main()
 {
     fastio
-    int tcase=1;
-    //cin>>tcase;
-    while(tcase--)
+    int t;
+    cin>>t;
+    while(t--)
     {
-        map<int,int> mymap;
         int n;
         cin>>n;
-        for (int i=1; i<=n; i++)
-	    {
-		    int x;
-    		cin>>x;
-		    mymap[x-i] += x;
-	    }
-	    int mx = 0;
-	    for (auto x : mymap) mx = max(mx, x.second);cout<<mx<<endl;
+        for(int i=1;i<=n;i++)
+        {
+            adjlist[i].clear();
+            visited[i]=false;
+            dist[i]=0;
+        }
+        for(int i=0;i<n-1;i++)
+        {
+            int f,s,w;
+            cin>>f>>s>>w;
+            adjlist[f].push_back({s,w});
+            adjlist[s].push_back({f,w});
+        }
+        bfs(n,1);
     }
-    return 0;
 }

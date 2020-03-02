@@ -39,25 +39,66 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
-
+#define MAXN 111
+int vis[MAXN],vis2[MAXN],dp[MAXN],arr[MAXN];
 int32_t main()
 {
     fastio
     int tcase=1;
-    //cin>>tcase;
+    cin>>tcase;
     while(tcase--)
     {
-        map<int,int> mymap;
+        memset(dp,0,MAXN);
+        memset(vis,0,MAXN);
+        memset(arr,0,MAXN);
+        memset(vis2,0,MAXN);
         int n;
         cin>>n;
-        for (int i=1; i<=n; i++)
-	    {
-		    int x;
-    		cin>>x;
-		    mymap[x-i] += x;
-	    }
-	    int mx = 0;
-	    for (auto x : mymap) mx = max(mx, x.second);cout<<mx<<endl;
+        repre(i,1,n)
+        {
+            cin>>arr[i];
+            vis[arr[i]]=1;
+        }
+        int piv=1,flag=0,tmp,cur,ind;
+        repre(i,1,n)
+        {
+            tmp=99999;
+            repre(j,1,n)
+            {
+                if(vis2[j])continue;
+                cur=arr[j];
+                if(cur<tmp)
+                {
+                    tmp=cur;
+                    ind=j;
+                }
+            }
+            vis2[ind]=1;
+            while(vis[piv])piv++;
+            vis[piv]=1;
+            dp[ind]=piv;
+        }
+        repre(i,1,n)
+        {
+            if(min(arr[i],dp[i])!=arr[i])
+            {
+                flag=1;
+                break;
+            }
+        }
+        if(flag)cout<<"-1"<<endl;
+        else
+        {
+            repre(i,1,n)
+            {
+                repre(j,i+1,n)
+                {
+                    if(min(arr[i],dp[j])==arr[i] && dp[i]>dp[j])swap(dp[i],dp[j]);
+                }
+            }
+            repre(i,1,n)cout<<arr[i]<<" "<<dp[i]<<" ";
+        }
+        cout<<endl;
     }
     return 0;
 }
