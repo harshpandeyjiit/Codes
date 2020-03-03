@@ -39,6 +39,7 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
+#define mod 1000000007
 
 int32_t main()
 {
@@ -47,31 +48,42 @@ int32_t main()
     //cin>>tcase;
     while(tcase--)
     {
-        string str;
-    	cin>>str;
-    	vector<int> ans;
-    	int ind=0;
-    	repr(i,ind,str.length())
-    	{
-    		if(str[i]!='(')continue;
-    		for(int j=str.length()-1;j>i;j--)
-    		{
-    			if(str[j]==')')
-    			{
-    				ans.push_back(i);
-    				ans.push_back(j);
-    				str[j]='*';
-    				i=j;
-    			}
-    		}
-    	}
-    	if(ans.size()==0)
-    	{
-    		cout<<0<<Endl;
-    		return 0;
-    	}
-    	cout<<1<<endl<<ans.size()<<endl;
-    	rep(i,ans.size())cout<<ans[i]+1<<" ";
+        int n,y;
+        cin>>n>>y;
+        int arr[n];
+        rep(i,n)cin>>arr[i];
+        int count=0;
+        sort(arr,arr+n);
+        int low=0,high=n-1;
+        pq<int> que1, que2;
+        // if(n==2)
+        // {
+        //     cout<<abs(arr[1]-arr[0])%y<<Endl;
+        //     return 0;
+        // }
+        while(low<high)
+        {
+        	que1.push(arr[low]);
+        	low++;
+        	if(low<high)
+        	{
+        		que2.push(arr[high]);
+        		high--;
+        	}
+        }
+        while(!que2.empty())
+        {
+        	int x = que1.top();
+        	int z = que2.top();
+        	if(abs(x-z)>=y)
+        	{
+        		count++;
+        		que1.pop();
+        		que2.pop();
+        	}
+        	else que2.pop();
+        }
+        cout<<count;
     }
     return 0;
 }

@@ -47,31 +47,32 @@ int32_t main()
     //cin>>tcase;
     while(tcase--)
     {
-        string str;
-    	cin>>str;
-    	vector<int> ans;
-    	int ind=0;
-    	repr(i,ind,str.length())
-    	{
-    		if(str[i]!='(')continue;
-    		for(int j=str.length()-1;j>i;j--)
-    		{
-    			if(str[j]==')')
-    			{
-    				ans.push_back(i);
+        string s;
+        cin>>s;
+        vector<int> ans;
+        int n=s.length();
+        for(int i=0;i<n-1;i++)
+        {
+            if(s[i]==')')continue;
+            for(int j=n-1;j>i;j--)
+            {
+                if(s[j]==')')
+                {
+                    ans.push_back(i);
     				ans.push_back(j);
-    				str[j]='*';
-    				i=j;
-    			}
-    		}
-    	}
-    	if(ans.size()==0)
-    	{
-    		cout<<0<<Endl;
-    		return 0;
-    	}
-    	cout<<1<<endl<<ans.size()<<endl;
-    	rep(i,ans.size())cout<<ans[i]+1<<" ";
+    				s[j]='*';
+                    break;
+                }
+            }
+        }
+        if(ans.size()==0)
+        {
+            cout<<0<<Endl;
+            return 0;
+        }
+        sort(ans.begin(),ans.end());
+        cout<<1<<endl<<ans.size()<<endl;
+        rep(i,ans.size())cout<<ans[i]+1<<" ";
     }
     return 0;
 }
