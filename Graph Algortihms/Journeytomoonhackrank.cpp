@@ -40,7 +40,7 @@ typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_nod
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
 int gcd(int a, int b){return b ? gcd (b, a % b) : a;}
-#define MAXN 10005
+#define MAXN 100005
 vector<int> adjlist[MAXN];
 int level[MAXN],visited[MAXN],count[MAXN];
 queue<int> q;
