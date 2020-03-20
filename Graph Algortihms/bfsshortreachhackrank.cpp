@@ -42,9 +42,9 @@ typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_nod
 int gcd(int a, int b){return b ? gcd (b, a % b) : a;}
 #define MAXN 10005
 vector<int> adjlist[MAXN];
-int level[MAXN],visited[MAXN],count[MAXN];
+int level[MAXN],visited[MAXN];
 queue<int> q;
-int current,color=1,size=1,ans=1;
+int current;
 
 void bfs()
 {
@@ -56,12 +56,12 @@ void bfs()
         {
             if(!visited[*it])
             {
-                size++;
                 visited[*it]=1;
-                level[*it]=color;
+                level[*it]=level[current]+1;
                 q.push(*it);
             }
         }
+        //cout<<current<<" ";
         q.pop();
     }
 }
@@ -70,47 +70,39 @@ int32_t main()
 {
     fastio
     int tcase=1;
-    //cin>>tcase;
+    cin>>tcase;
     while(tcase--)
     {
         int u,v;
         cin>>u>>v;
         memset(level,-1,sizeof(level));
         memset(visited,0,sizeof(visited));
+        q.empty();
+        rep(i,MAXN)adjlist[i].clear();
         rep(i,v)
         {
             int a,b;
             cin>>a>>b;
+            --a,--b;
             adjlist[a].push_back(b);
             adjlist[b].push_back(a);
         }
-        vector<int> countrySizes;
+        int start;
+        cin>>start;
+        --start;
+        visited[start]=1;
+        level[start]=0;
+        q.push(start);
+        bfs();
+        int notreached=-1;
         rep(i,u)
         {
-            if(!visited[i])
-            {
-                level[i]=color;
-                q.push(i);
-                visited[i]=1;
-                bfs();
-                //cout<<size<<endl;
-                countrySizes.push_back(size);
-                ++color;
-                size=1;
-            }
+            if(i!=start)cout<<max(notreached,level[i]*6)<<" ";
         }
-        int sum = 0;
-        int result = 0;
-        for(int size : countrySizes)
-        {
-           result += sum*size;
-           sum += size;
-        }
-        cout<<result;
+        cout<<endl;
     }
     return 0;
 }
-
 
 bool isPrime(int n)
 {
