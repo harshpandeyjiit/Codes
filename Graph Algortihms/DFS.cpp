@@ -44,11 +44,6 @@ typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_nod
 vector<int> adjLists[MAXN];
 int visited[MAXN];
 
-void addEdge(int src, int dest)
-{
-    adjLists[src].push_back(dest);
-}
-
 void DFS(int vertex)
 {
     visited[vertex] = true;

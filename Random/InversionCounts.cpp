@@ -37,32 +37,32 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
+
 int Merge(int arr[], int aux[], int low, int mid, int high)
 {
 	int k = low, i = low, j = mid + 1;
 	int inversionCount = 0;
 	while (i <= mid && j <= high)
 	{
-		if (arr[i] <= arr[j]) {
+		if (arr[i] <= arr[j])
+		{
 			aux[k++] = arr[i++];
 		}
-		else {
+		else
+		{
 			aux[k++] = arr[j++];
 			inversionCount += (mid - i + 1);
 		}
 	}
-	while (i <= mid)
-		aux[k++] = arr[i++];
-	for (int i = low; i <= high; i++)
-		arr[i] = aux[i];
+	while (i <= mid)aux[k++] = arr[i++];
+	for (int i = low; i <= high; i++)arr[i] = aux[i];
 	return inversionCount;
 }
 
 int MergeSort(int arr[], int aux[], int low, int high)
 {
 
-	if (high == low)
-		return 0;
+	if (high == low)return 0;
 	int mid = (low + ((high - low) >> 1));
 	int inversionCount = 0;
 	inversionCount += MergeSort(arr, aux, low, mid);

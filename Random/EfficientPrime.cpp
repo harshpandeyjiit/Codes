@@ -66,7 +66,6 @@ int32_t main()
         int n;
         cin>>n;
         primefactor(n);
-
     }
     return 0;
 }

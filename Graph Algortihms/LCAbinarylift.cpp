@@ -1,4 +1,4 @@
-/*------------------------------------------HARSH_JIIT------------------------------------------------*/
+/*------------------------------------------HARSH_JIIT-------------------------------------------------*/
 
 #include<bits/stdc++.h>
 #include<ext/pb_ds/assoc_container.hpp>
@@ -43,17 +43,46 @@ typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_nod
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
 #define MOD 100000007
-#define MAXN 100005
-
-/*----------------------------------------------------------------------------------------------------*/
+#define MAXN 100
+vector<int> adjlist[MAXN];
+int tin[MAXN]={0},tout[MAXN]={0};
+int up[MAXN][100];
+int timer=0;
+int L;
+/*---------------------------------------------------------------------------------------------------*/
 int gcd(int a, int b);
 int ncr(int n, int r);
 int npr(int n, int r);
 bool isPrime(int n);
-int pow(int a,int b);
-int pow(int a,int b,int mod);
-/*----------------------------------------------------------------------------------------------------*/
+int binexp(int a,int b);
+int modbinexp(int a,int b,int mod);
+bool is_parent(int u, int v)
+{
+    return tin[u]<=tin[v] && tout[u]>=tout[v];
+}
+void dfs(int v,int p)
+{
+    tin[v]=++timer;
+    up[v][0]=p;
+    for(int i=1;i<=L;i++)
+        up[v][i]=up[up[v][i-1]][i-1];
+    for(auto u: adjlist[v])
+    {
+        if(u!=p)dfs(u,v);
+    }
+    tout[v]=++timer;
+}
 
+int lca(int u,int v)
+{
+    if(is_parent(u,v))return u;
+    else if(is_parent(v,u))return v;
+    for(int i=L;i>=0;--i)
+    {
+        if(!is_parent(up[u][i],v))u=up[u][i];
+    }
+    return up[u][0];
+}
 /*---------------------------------------------MAIN---------------------------------------------------*/
 
 int32_t main()
@@ -61,7 +90,28 @@ int32_t main()
     fastio
     //tcase
     {
-        
+        int n;
+        int m;
+        cin>>n>>m;
+        L=log2(n);
+        while(m--)
+        {
+            int a,b;
+            cin>>a>>b;
+            --a,--b;
+            adjlist[a].pb(b);
+            adjlist[b].pb(a);
+        }
+        dfs(0,0);
+        int q;
+        cin>>q;
+        while(q--)
+        {
+            int a,b;
+            cin>>a>>b;
+            --a,--b;
+            cout<<lca(a,b)+1<<endl;
+        }
     }
     return 0;
 }
@@ -95,7 +145,7 @@ bool isPrime(int n)
             return false;
     return true;
 }
-int pow(int a,int b)
+int binpow(int a,int b)
 {
     int res=1;
     while (b > 0)
@@ -106,7 +156,7 @@ int pow(int a,int b)
     }
     return res;
 }
-int pow(int a,int b,int mod)
+int modbinexp(int a,int b,int mod)
 {
     a%=mod;
     int res=1;
