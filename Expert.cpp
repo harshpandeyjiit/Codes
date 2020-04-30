@@ -50,8 +50,8 @@ int gcd(int a, int b);
 int ncr(int n, int r);
 int npr(int n, int r);
 bool isPrime(int n);
-int binexp(int a,int b);
-int modbinexp(int a,int b,int mod);
+int pow(int a,int b);
+int pow(int a,int b,int mod);
 /*----------------------------------------------------------------------------------------------------*/
 
 /*---------------------------------------------MAIN---------------------------------------------------*/
@@ -61,22 +61,43 @@ int32_t main()
     fastio
     tcase
     {
-        int n, pw = 1, sub = 0;
-		cin >> n;
-		while (pw / 3 <= n)
+        int a,b,q;
+        cin>>a>>b>>q;
+        if(a>b)
+        swap(a,b);
+        int lcm=(a*b)/__gcd(a,b);
+        while(q--)
         {
-			sub += pw;
-			pw *= 3;
-		}
-    	while (pw)
-        {
-    		if (sub - pw >= n)
+            int x,y;
+            cin>>x>>y;
+            if(y<b)
+            cout<<"0"<<" ";
+            else if(b<y and x<b)
+            cout<<y-b+1<<" ";
+            else
             {
-    			sub -= pw;
-			}
-    		pw /= 3;
-		}
-    	cout << sub << '\n';
+                if(y<lcm)
+                cout<<y-x+1<<" ";
+                else if(lcm<=x)
+                {
+                    int m=y/lcm,n=x/lcm,ans=0;
+                    int val=m-n;
+                    ans=b*val;
+                    if(lcm*m+b>=200)
+                    ans-=(b-y%lcm);
+                    if(x-lcm<=b)ans+=(x-lcm);
+                    cout<<y-x+1-ans<<" ";
+                }
+                else
+                {
+                    int m=y/lcm,n=x/lcm,ans=0;
+                    int val=m-n;
+                    ans=b*val;
+                    if(lcm*m+b>=200)ans-=(b-y%lcm);
+                    cout<<y-x+1-ans<<" ";
+                }
+            }
+        }
     }
     return 0;
 }
@@ -110,7 +131,7 @@ bool isPrime(int n)
             return false;
     return true;
 }
-int binpow(int a,int b)
+int pow(int a,int b)
 {
     int res=1;
     while (b > 0)
@@ -121,7 +142,7 @@ int binpow(int a,int b)
     }
     return res;
 }
-int modbinexp(int a,int b,int mod)
+int pow(int a,int b,int mod)
 {
     a%=mod;
     int res=1;

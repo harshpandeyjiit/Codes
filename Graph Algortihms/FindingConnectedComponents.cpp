@@ -39,19 +39,17 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
-
-#define n 5
-
-vector<int> adjLists[n];
-int visited[n];
+#define MAXN 4000005
+vector<int> adjLists[MAXN];
+int visited[MAXN];
 int color=0;
 
-addEdge(int src, int dest)
+void addEdge(int src, int dest)
 {
     adjLists[src].push_back(dest);
 }
 
-DFS(int vertex)
+void DFS(int vertex)
 {
     visited[vertex] = true;
     vector<int>::iterator i;
@@ -70,11 +68,16 @@ int32_t main()
     int t=1;
     while(t--)
     {
-        addEdge(0, 1);
-        addEdge(1, 2);
-        addEdge(4, 3);
-        addEdge(3, 4);
-        for(int i=0;i<5;i++)
+        int n,m;
+        cin>>n>>m;
+        rep(i,m)
+        {
+            int u,v;
+            cin>>u>>v;
+            addEdge(u,v);
+            addEdge(v,u);
+        }
+        rep(i,n)
         {
             if(!visited[i])color++;
             DFS(i);

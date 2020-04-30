@@ -1,72 +1,47 @@
-/*#          #  # # # # #  # # # # #  # # # # #  #          #
-  #          #  #       #  #       #  #          #          #
-  # # # # # ##  # # # # #  ## # # #   # # # # #  # # # # # ##
-  #          #  #       #  #    #             #  #          #
-  #          #  #       #  #      #   # # # # #  #          #*/
-#include<bits/stdc++.h>
-#include<ext/pb_ds/assoc_container.hpp>
-#include<ext/pb_ds/tree_policy.hpp>
-#define int long long
-#define mkp make_pair
-#define pb push_back
-#define ff first
-#define ss second
-#define debug1(a) cout<<a<<endl;
-#define debug2(a,b) cout<<a<<' '<<b<<endl;
-#define debug3(a,b,c) cout<<a<' '<<b<<' '<<c<<endl;
-#define rep(i,n) for(int i=0;i<n;i++)
-#define repr(i,a,b)for(int i=a;i<b;i++)
-#define repre(i,a,b)for(int i=a;i<=b;i++)
-#define pi pair<int,int>
-#define pii pair<int,pi>
-#define mp map<int,int>
-#define ump unordered_map<int,int>
-#define st set<int>
-#define ust unordered_set<int>
-#define mst multiset<int>
-#define pq priority_queue
-#define mpq priority_queue<int,vector<int>,grater<int> >
-#define fastio ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
-#define sumofdigits(sum,num) int sum = 0; while (n != 0) { sum = sum + n % 10; n = n/10; }
-#define int2str(str,n) n=boost::lexical_cast<int>(str);
-#define float2str(str,n) n=boost::lexical_cast<float>(str);
-using namespace __gnu_pbds;
+#include <bits/stdc++.h>
 using namespace std;
-typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> orderedSet;
-typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
-//*p.find_by_order(index) return value at index
-//p.order_of_key(key) return index
-void LIS(int arr[],int n)
-{
-    int dp[n]={0};
-    dp[0]=1;
-    repr(i,1,n)
-    {
-        dp[i]=1;
-        rep(j,i)
-        {
-            if ( arr[i] > arr[j] && dp[i] < dp[j] + 1)
-                dp[i] = dp[j] + 1;
-            //else break;
+#define pb push_back
+#define mp make_pair
+#define f first
+#define s second
+#define sz size()
+#define all(_v) _v.begin(), _v.end()
+#define ll long long
+
+const int MASK = (1ll << 20);
+const ll MOD = 1e9 + 7;
+int n;
+ll dp[MASK];
+ll binpow(ll a, ll n) {
+    ll res = 1;
+    while(n) {
+        if(n & 1) res = res * a % MOD, n--;
+        else {
+            a = a * a % MOD;
+            n >>= 1;
         }
     }
-    cout<<*max_element(dp,dp+n)<<endl;
-    //printing the longest increasing subsequence
-
+    return res;
 }
-
-int32_t main()
-{
-    fastio
-    int t=1;
-    cin>>t;
-    while(t--)
-    {
-        int n;
-        cin>>n;
-        int arr[n];
-        rep(i,n)cin>>arr[i];
-        LIS(arr,n);
-    }
-    return 0;
+bool was[MASK];
+ll ans = 1;
+int main () {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+    n = 1e5;
+	///cin >> n;
+	for(int i = 1; i <= n; ++i) {
+        int x = rand() % (1ll << 20);
+        ///cin >> x;
+        dp[x]++;
+        was[x] = 1;
+	}
+    for(int i = 0; i < 20; i++)
+        for(int mask = (1 << 20) - 1; mask >= 0; mask--)
+            if ((mask >> i) & 1)
+                dp[mask ^ (1 << i)] = (dp[mask ^ (1 << i)] + dp[mask]) % MOD;
+    for(int i = 0; i < MASK; ++i) if(was[i]) ans = (ans + binpow(2, dp[i] - 1)) % MOD;
+    cout << (binpow(2, n) - ans + MOD) % MOD;
+	return 0;
 }

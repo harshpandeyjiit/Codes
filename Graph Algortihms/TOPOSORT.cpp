@@ -59,7 +59,7 @@ int32_t main()
 	            adjList[u].push_back(v);
 	            ++indegree[v];
 	        }
-	        priority_queue<int, vector<int>, greater<int>> q;
+	        queue<int> q;
 	        vector<int> solution;
 	        for(int i = 1; i <= n; ++i)
 			{
@@ -67,7 +67,7 @@ int32_t main()
 	        }
 			while(!q.empty())
 			{
-	            u = q.top();
+	            u = q.front();
 				q.pop();
 	            solution.push_back(u);
 	            for(unsigned i = 0; i < adjList[u].size(); ++i)
@@ -77,8 +77,8 @@ int32_t main()
 	                if(indegree[v] == 0) q.push(v);
 	            }
 	        }
-			if(solution.size()<n)cout<<"Sandro fails."<<endl;
-			else
+			//if(solution.size()<n)cout<<"Sandro fails."<<endl;
+			//else
 			{
 				for(int i = 0; i < n; ++i)
 				{

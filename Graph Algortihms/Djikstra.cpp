@@ -42,42 +42,92 @@ typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_upda
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
 //p.order_of_key(key) return index
-#define MOD 100000007
-#define MAXN 100005
 
 /*----------------------------------------------------------------------------------------------------*/
 int gcd(int a, int b);
 int ncr(int n, int r);
 int npr(int n, int r);
 bool isPrime(int n);
-int binexp(int a,int b);
-int modbinexp(int a,int b,int mod);
+int pow(int a,int b);
+int pow(int a,int b,int mod);
 /*----------------------------------------------------------------------------------------------------*/
 
 /*---------------------------------------------MAIN---------------------------------------------------*/
 
+const int MAXN = 505;
+const int INF  = 9e18;
+
+struct Node
+{
+    int id,w;
+    Node(int _id, int _w){id = _id; w = _w;}
+    bool operator< (const Node &t)const{return w>t.w;}
+};
+
+vector<int>g[MAXN],wei[MAXN];
+int dist[MAXN];
+
+void Init_Single_Source(int src, int n)
+{
+    for(int i=0;i<n;i++)dist[i] = INF;
+    dist[src] = 0;
+}
+
+bool Relax(int u,int v,int wei)
+{
+    if( dist[v] > dist[u] + wei)
+    {
+        dist[v] = dist[u] + wei;
+        return true;
+    }
+    return false;
+}
+
+void Dijkstra(int strt,int n)
+{
+    int v,u;
+    priority_queue<Node>pq;
+    Init_Single_Source(strt,n);
+    pq.push(Node(strt,0));
+    while(!pq.empty())
+    {
+        u = pq.top().id; pq.pop();
+        for(int i=0;i<g[u].size();i++)
+        {
+            v = g[u][i];
+            if(Relax(u,v,wei[u][i]))
+                pq.push(Node(v,dist[v]));
+        }
+    }
+}
+
 int32_t main()
 {
     fastio
-    tcase
+    int n,m,a,b,w,src,q;
+    n=505;
+    scanf("%lld",&m);
+    //m=n;
+    while(m--)
     {
-        int n, pw = 1, sub = 0;
-		cin >> n;
-		while (pw / 3 <= n)
-        {
-			sub += pw;
-			pw *= 3;
-		}
-    	while (pw)
-        {
-    		if (sub - pw >= n)
-            {
-    			sub -= pw;
-			}
-    		pw /= 3;
-		}
-    	cout << sub << '\n';
+        scanf("%lld%lld%lld",&a,&b,&w);
+        g[a].push_back(b);
+        g[b].push_back(a);
+        wei[a].push_back(w);
+        wei[b].push_back(w);
     }
+    cin>>src;
+    Dijkstra(src,n);
+    cin>>q;
+    while(q--)
+    {
+        int dest;
+        cin>>dest;
+        if(dist[dest]!=INF)cout<<dist[dest]<<endl;
+        else cout<<"NO PATH"<<endl;
+    }
+    //for(int i=0;i<n;i++)printf("%lld ",dist[i]);
+    printf("\n");
     return 0;
 }
 
@@ -110,7 +160,7 @@ bool isPrime(int n)
             return false;
     return true;
 }
-int binpow(int a,int b)
+int pow(int a,int b)
 {
     int res=1;
     while (b > 0)
@@ -121,7 +171,7 @@ int binpow(int a,int b)
     }
     return res;
 }
-int modbinexp(int a,int b,int mod)
+int pow(int a,int b,int mod)
 {
     a%=mod;
     int res=1;

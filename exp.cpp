@@ -50,8 +50,8 @@ int gcd(int a, int b);
 int ncr(int n, int r);
 int npr(int n, int r);
 bool isPrime(int n);
-int binexp(int a,int b);
-int modbinexp(int a,int b,int mod);
+int pow(int a,int b);
+int pow(int a,int b,int mod);
 /*----------------------------------------------------------------------------------------------------*/
 
 /*---------------------------------------------MAIN---------------------------------------------------*/
@@ -59,24 +59,11 @@ int modbinexp(int a,int b,int mod);
 int32_t main()
 {
     fastio
-    tcase
+    //tcase
     {
-        int n, pw = 1, sub = 0;
-		cin >> n;
-		while (pw / 3 <= n)
-        {
-			sub += pw;
-			pw *= 3;
-		}
-    	while (pw)
-        {
-    		if (sub - pw >= n)
-            {
-    			sub -= pw;
-			}
-    		pw /= 3;
-		}
-    	cout << sub << '\n';
+        int n,k;
+        cin>>n>>k;
+
     }
     return 0;
 }
@@ -110,7 +97,7 @@ bool isPrime(int n)
             return false;
     return true;
 }
-int binpow(int a,int b)
+int pow(int a,int b)
 {
     int res=1;
     while (b > 0)
@@ -121,7 +108,7 @@ int binpow(int a,int b)
     }
     return res;
 }
-int modbinexp(int a,int b,int mod)
+int pow(int a,int b,int mod)
 {
     a%=mod;
     int res=1;
