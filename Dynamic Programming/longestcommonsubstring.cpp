@@ -35,12 +35,12 @@ using namespace std;
 typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> orderedSet;
 typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
 //*p.find_by_order(index) return value at index
+int dp[3005][3005];
 
 void lcs(string x, string y)
 {
-  int ans=0;
+    int ans=0;
     int m=x.length(),n=y.length();
-    int dp[m+1][n+1];
     rep(i,m+1)
     {
         rep(j,n+1)
@@ -60,7 +60,7 @@ void lcs(string x, string y)
             }
         }
     }
-    cout<<dp[m][n]<<endl;
+    //cout<<dp[m][n]<<endl;
     //To Print The longest Common SubString
     string z="";
     int i=m,j=n;
@@ -86,7 +86,7 @@ int32_t main()
 {
     fastio
     int t=1;
-    cin>>t;
+    //cin>>t;
     while(t--)
     {
         string x,y;

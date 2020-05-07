@@ -59,21 +59,30 @@ int pow(int a,int b,int mod);
 int32_t main()
 {
     fastio
-    tcase
+    //tcase
     {
         int n;
-    	cin>>n;
-    	vector <int> a(n);
-        unordered_set<int> s;
-    	rep(i,n)
-        {
-            cin>>a[i];
-            if(a[i]>=0)a[i]=(i+(a[i])%n)%n;
-			else a[i]=(i+n+a[i]%n)%n;
-            s.insert(a[i]);
-        }
-    	if(s.size()==n)cout << "YES" <<endl;
-        else cout << "NO" <<endl;
+	cin>>n;
+	int a,b,c;
+	int dp[2][3];
+	cin>>a>>b>>c;
+	dp[0][0]=a; dp[0][1]=b;  dp[0][2]=c;
+	dp[1][0]=0; dp[1][1]=0;  dp[1][2]=0;
+	for(int i=1;i<n;i++){
+		cin>>a>>b>>c;
+		if(i%2==1){
+		dp[1][0]=a+max(dp[0][1],dp[0][2]);
+		dp[1][1]=b+max(dp[0][0],dp[0][2]);
+		dp[1][2]=c+max(dp[0][1],dp[0][0]);}
+		else {
+		dp[0][0]=a+max(dp[1][1],dp[1][2]);
+		dp[0][1]=b+max(dp[1][0],dp[1][2]);
+		dp[0][2]=c+max(dp[1][1],dp[1][0]);}
+
+	}
+	int ans1=max(dp[1][0],max(dp[1][1],dp[1][2]));
+	int ans2=max(dp[0][0],max(dp[0][1],dp[0][2]));
+	cout<<max(ans1,ans2)<<endl;
     }
     return 0;
 }

@@ -59,21 +59,22 @@ int pow(int a,int b,int mod);
 int32_t main()
 {
     fastio
-    tcase
+    //tcase
     {
-        int n;
-    	cin>>n;
-    	vector <int> a(n);
-        unordered_set<int> s;
-    	rep(i,n)
+        int n,k;
+        cin>>n>>k;
+        int h[n],dp[n];
+        memset(dp,0,sizeof(dp));
+        rep(i,n)cin>>h[i];
+        dp[1]=abs(h[1]-h[0]);
+        repr(i,2,n)
         {
-            cin>>a[i];
-            if(a[i]>=0)a[i]=(i+(a[i])%n)%n;
-			else a[i]=(i+n+a[i]%n)%n;
-            s.insert(a[i]);
+            int m=1e9;
+            for(int j=1;j<=min(i,k);j++)m=min(m,dp[i-j]+abs(h[i-j]-h[i]));
+            dp[i]=m;
         }
-    	if(s.size()==n)cout << "YES" <<endl;
-        else cout << "NO" <<endl;
+        //rep(i,n)cout<<dp[i]<<" ";
+        cout<<dp[n-1];
     }
     return 0;
 }
