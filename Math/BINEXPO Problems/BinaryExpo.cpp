@@ -58,7 +58,7 @@ int32_t main()
     {
         int n;
         //cin>>n;
-		    cout<<binpow(2,50)<<endl;
+		    cout<<binpow(2,5)<<endl;
     }
     return 0;
 }
