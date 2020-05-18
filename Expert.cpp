@@ -1,13 +1,9 @@
 /*------------------------------------------HARSH_JIIT------------------------------------------------*/
 
 #include<bits/stdc++.h>
-#include<ext/pb_ds/assoc_container.hpp>
-#include<ext/pb_ds/tree_policy.hpp>
 using namespace std;
-using namespace __gnu_pbds;
 
 /*----------------------------------------------------------------------------------------------------*/
-
 #define int long long
 #define mkp make_pair
 #define pb push_back
@@ -27,7 +23,6 @@ using namespace __gnu_pbds;
 #define pii pair<int,pi>
 #define mp map<int,int>
 #define ump unordered_map<int,int>
-#define st set<int>
 #define ust unordered_set<int>
 #define mst multiset<int>
 #define pq priority_queue
@@ -38,10 +33,8 @@ using namespace __gnu_pbds;
 #define iofile freopen("input.txt", "r", stdin);freopen("output.txt", "w", stdout);
 #define fastio ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
 #define tcase int test_case;cin>>test_case; while(test_case--)
-typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> orderedSet;
-typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> orderedMSet;
-//*p.find_by_order(index) return value at index
-//p.order_of_key(key) return index
+/*----------------------------------------------------------------------------------------------------*/
+
 #define MOD 100000007
 #define MAXN 100005
 
@@ -61,19 +54,20 @@ int32_t main()
     fastio
     tcase
     {
-        int n;
-    	cin>>n;
-    	vector <int> a(n);
-        unordered_set<int> s;
-    	rep(i,n)
+        int a,b,c,d;
+        cin>>a>>b>>c>>d;
+        int st=b,at=c;
+        if(st<a)
         {
-            cin>>a[i];
-            if(a[i]>=0)a[i]=(i+(a[i])%n)%n;
-			else a[i]=(i+n+a[i]%n)%n;
-            s.insert(a[i]);
+            if(c<=d)
+            {
+                st=-1;
+                goto xy;
+            }
+            int ans=ceil((double)(a-st)/(double)(c-d));
+            st+=ans*c;
         }
-    	if(s.size()==n)cout << "YES" <<endl;
-        else cout << "NO" <<endl;
+        xy:cout<<st<<Endl;
     }
     return 0;
 }
