@@ -76,6 +76,7 @@ int32_t main()
         {
             int a,b;
             cin>>a>>b;
+            --a,--b;
             adjlist[a].pb(b);
             adjlist[b].pb(a);
         }

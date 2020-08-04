@@ -55,8 +55,7 @@ void dfs(int u)
         if( visited[it]==false)
         {
             dfs(it);
-            for(i=0;i<26;i++)
-            dp[u][i]+=dp[it][i];
+            for(i=0;i<26;i++)dp[u][i]+=dp[it][i];
         }
     }
     dp[u][ch[u]-97]++;
