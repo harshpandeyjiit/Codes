@@ -1,0 +1,9 @@
+
+# HTID:4858070: DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES BELOW
+php_value display_errors 1
+# DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES ABOVE HTID:4858070:
+# 1 Month for most static assets
+<filesMatch ".(jpg|jpeg|png|gif|ico|css|js)$">
+Header append Vary: Accept-Encoding
+Header set Cache-Control "max-age=2592000, public"
+</filesMatch>
