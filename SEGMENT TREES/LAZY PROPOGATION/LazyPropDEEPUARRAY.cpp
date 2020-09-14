@@ -12,7 +12,7 @@
 #define ff first
 #define ss second
 #define debug1(a) cout<<a<<endl;
-#define debug2(a,b) cout<<a<<' '<<b<<endl;
+#define wdebug2(a,b) cout<<a<<' '<<b<<endl;
 #define debug3(a,b,c) cout<<a<' '<<b<<' '<<c<<endl;
 #define rep(i,n) for(int i=0;i<n;i++)
 #define repr(i,a,b)for(int i=a;i<b;i++)
