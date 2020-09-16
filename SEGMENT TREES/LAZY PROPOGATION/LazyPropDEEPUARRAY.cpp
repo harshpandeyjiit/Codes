@@ -41,7 +41,7 @@ typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_nod
 void build(int tre[],int lazy[],int arr[],int v,int tl,int tr)
 {
 	if(tl>tr)return;
-	if(tl==tr)
+	else if(tl==tr)
 	{
 		tre[v]=arr[tl];
 		return ;
